@@ -85,7 +85,8 @@ const loginUser = async (req, res) => {
       throw new Error("User not found.");
     }
 
-    const isMatch = bcrypt.compare(password, loginUser.password);
+    const isMatch = await bcrypt.compare(password, loginUser.password);
+
     if (!isMatch) {
       throw new Error("Incorrect Password.");
     }
