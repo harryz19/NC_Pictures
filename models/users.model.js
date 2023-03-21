@@ -20,7 +20,6 @@ const userSchema = new mongoose.Schema({
   },
   profileImg: {
     type: String,
-    required: [true, "Profile Image is required."],
   },
   lat: Number,
   lng: Number,
