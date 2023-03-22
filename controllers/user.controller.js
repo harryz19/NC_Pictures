@@ -45,31 +45,13 @@ const registerUser = async (req, res) => {
 
     return res.status(201).json({
       status: "success",
-      data: "",
+      data: {},
       message: "User registered successfully.",
     });
   } catch (error) {
-    if (error.code === 11000) {
-      const keys = Object.keys(error.keyValue);
-      return res.status(400).send({
-        status: "error",
-        message: `This ${keys[0]} is already being used`,
-      });
-    }
-    if (error instanceof mongoose.Error.ValidationError) {
-      const customErrors = {};
-      for (field in error.errors) {
-        customErrors[field] = error.errors[field].message;
-      }
-      return res.status(400).send({
-        status: "error",
-        data: "",
-        message: customErrors,
-      });
-    }
-    res.status(400).send({
+    return res.status(400).send({
       status: "error",
-      data: "",
+      data: {},
       message: error.message,
     });
   }
@@ -99,7 +81,7 @@ const loginUser = async (req, res) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ status: "error", data: "", message: error.message });
+      .json({ status: "error", data: {}, message: error.message });
   }
 };
 
@@ -152,7 +134,7 @@ const socialLogin = async (req, res) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ status: "error", data: "", message: error.message });
+      .json({ status: "error", data: {}, message: error.message });
   }
 };
 
@@ -180,7 +162,7 @@ const updateMobile = async (req, res) => {
   } catch (error) {
     return res
       .status(400)
-      .json({ status: "error", data: "", message: error.message });
+      .json({ status: "error", data: {}, message: error.message });
   }
 };
 
@@ -193,13 +175,13 @@ const deleteUser = async (req, res) => {
 
     return res.status(200).json({
       status: "success",
-      data: "",
+      data: {},
       message: "User account delete successfully",
     });
   } catch (error) {
     return res.status(400).json({
       status: "error",
-      data: "",
+      data: {},
       message: error.message,
     });
   }

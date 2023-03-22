@@ -13,22 +13,22 @@ const createAppointment = async (req, res) => {
       lng,
       address,
       price,
-      starttime,
+      starttime: new Date(starttime).getTime(),
       customer_id: req.user._id,
       customer_name: req.user.name,
-      created_time: Date.now(),
+      created_time: new Date().getTime(),
     });
 
     await appointment.save();
     return res.status(201).json({
       status: "success",
       message: "Appointment created successfully.",
-      data: "",
+      data: {},
     });
   } catch (error) {
     return res.status(400).json({
       status: "error",
-      data: "",
+      data: {},
       message: error.message,
     });
   }
@@ -51,7 +51,7 @@ const appointmentById = async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       status: "error",
-      data: "",
+      data: {},
       message: error.message,
     });
   }
@@ -74,7 +74,7 @@ const appointmentsByCustomer = async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       status: "error",
-      data: "",
+      data: {},
       message: error.message,
     });
   }
@@ -129,7 +129,7 @@ const appointmentsByProvider = async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       status: "error",
-      data: "",
+      data: {},
       message: error.message,
     });
   }
@@ -167,13 +167,13 @@ const updateStatus = async (req, res) => {
     }
     return res.status(200).json({
       status: "success",
-      data: "",
+      data: {},
       message: "Status Updated Successfully.",
     });
   } catch (error) {
     return res.status(400).json({
       status: "error",
-      data: "",
+      data: {},
       message: error.message,
     });
   }
