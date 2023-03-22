@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 const appointmentSchema = new mongoose.Schema({
   customer_name: String,
-  provider_name: String,
+  photographer_name: String,
   customer_id: mongoose.Types.ObjectId,
-  provider_id: mongoose.Types.ObjectId,
+  photographer_id: mongoose.Types.ObjectId,
   lat: Number,
   lng: Number,
   address: String,

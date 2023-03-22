@@ -98,15 +98,13 @@ const appointmentsByProvider = async (req, res) => {
         data: appointments,
       });
     } else if (status === "accepted") {
-      console.log(req.user._id);
       const appointments = await Appointment.find({
         status,
-        provider_id: req.user._id,
+        photographer_id: req.user._id,
       })
         .where("starttime")
         .gt(starttime)
         .lt(endtime);
-      console.log("Accepted");
       return res.status(200).json({
         status: "success",
         message: "",
@@ -115,7 +113,7 @@ const appointmentsByProvider = async (req, res) => {
     } else if (status === "completed") {
       const appointments = await Appointment.find({
         status,
-        provider_id: req.user._id,
+        photographer_id: req.user._id,
       })
         .where("starttime")
         .gt(starttime)
@@ -150,8 +148,8 @@ const updateStatus = async (req, res) => {
         {
           status,
           accepted_date: Date.now(),
-          provider_id: req.user._id,
-          provider_name: req.user.name,
+          photographer_id: req.user._id,
+          photographer_name: req.user.name,
         }
       );
     } else if (status === "completed") {
@@ -160,8 +158,8 @@ const updateStatus = async (req, res) => {
         {
           status,
           completed_date: Date.now(),
-          provider_id: req.user._id,
-          provider_name: req.user.name,
+          photographer_id: req.user._id,
+          photographer_name: req.user.name,
         }
       );
     }
