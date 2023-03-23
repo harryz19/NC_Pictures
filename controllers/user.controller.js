@@ -156,7 +156,7 @@ const updateMobile = async (req, res) => {
 
     return res.status(200).json({
       status: "success",
-      data: user.toJSON(),
+      data: { user: user.toJSON() },
       message: "Details updated successfully.",
     });
   } catch (error) {

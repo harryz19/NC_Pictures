@@ -46,7 +46,7 @@ const appointmentById = async (req, res) => {
     return res.status(200).json({
       status: "success",
       message: "",
-      data: appointment,
+      data: { appointment },
     });
   } catch (error) {
     return res.status(400).json({
@@ -63,12 +63,12 @@ const appointmentsByCustomer = async (req, res) => {
     const { starttime, endtime } = req.body;
     const appointments = await Appointment.find({ customer_id: req.user._id })
       .where("starttime")
-      .gt(starttime)
-      .lt(endtime);
+      .gt(new Date(starttime).getTime())
+      .lt(new Date(endtime).getTime());
 
     return res.status(200).json({
       status: "success",
-      data: appointments,
+      data: { appointments },
       message: "",
     });
   } catch (error) {
@@ -90,12 +90,12 @@ const appointmentsByProvider = async (req, res) => {
         status,
       })
         .where("starttime")
-        .gt(starttime)
-        .lt(endtime);
+        .gt(new Date(starttime).getTime())
+        .lt(new Date(endtime).getTime());
       return res.status(200).json({
         status: "success",
         message: "",
-        data: appointments,
+        data: { appointments },
       });
     } else if (status === "accepted") {
       const appointments = await Appointment.find({
@@ -103,12 +103,12 @@ const appointmentsByProvider = async (req, res) => {
         photographer_id: req.user._id,
       })
         .where("starttime")
-        .gt(starttime)
-        .lt(endtime);
+        .gt(new Date(starttime).getTime())
+        .lt(new Date(endtime).getTime());
       return res.status(200).json({
         status: "success",
         message: "",
-        data: appointments,
+        data: { appointments },
       });
     } else if (status === "completed") {
       const appointments = await Appointment.find({
@@ -116,12 +116,12 @@ const appointmentsByProvider = async (req, res) => {
         photographer_id: req.user._id,
       })
         .where("starttime")
-        .gt(starttime)
-        .lt(endtime);
+        .gt(new Date(starttime).getTime())
+        .lt(new Date(endtime).getTime());
       return res.status(200).json({
         status: "success",
         message: "",
-        data: appointments,
+        data: { appointments },
       });
     }
   } catch (error) {
@@ -147,7 +147,7 @@ const updateStatus = async (req, res) => {
         { _id: req.params.id },
         {
           status,
-          accepted_date: Date.now(),
+          accepted_date: new Date().getTime(),
           photographer_id: req.user._id,
           photographer_name: req.user.name,
         }
@@ -157,7 +157,7 @@ const updateStatus = async (req, res) => {
         { _id: req.params.id },
         {
           status,
-          completed_date: Date.now(),
+          completed_date: new Date().getTime(),
           photographer_id: req.user._id,
           photographer_name: req.user.name,
         }
