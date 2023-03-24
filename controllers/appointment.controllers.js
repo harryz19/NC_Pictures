@@ -19,7 +19,7 @@ const createAppointment = async (req, res) => {
       created_time: new Date().getTime(),
       photographer_id: null,
       photographer_name: null,
-      accepted_date: null,
+      accepted_time: null,
       completed_time: null,
     });
 
@@ -151,7 +151,7 @@ const updateStatus = async (req, res) => {
         { _id: req.params.id },
         {
           status,
-          accepted_date: new Date().getTime(),
+          accepted_time: new Date().getTime(),
           photographer_id: req.user._id,
           photographer_name: req.user.name,
         }
@@ -161,7 +161,7 @@ const updateStatus = async (req, res) => {
         { _id: req.params.id },
         {
           status,
-          completed_date: new Date().getTime(),
+          completed_time: new Date().getTime(),
           photographer_id: req.user._id,
           photographer_name: req.user.name,
         }

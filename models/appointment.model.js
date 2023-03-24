@@ -24,7 +24,7 @@ const appointmentSchema = new mongoose.Schema({
   starttime: Number,
   completed_time: Number,
   created_time: Number,
-  accepted_date: Number,
+  accepted_time: Number,
   price: {
     type: Number,
     required: [true, "Price is required."],
