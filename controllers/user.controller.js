@@ -119,7 +119,6 @@ const socialLogin = async (req, res) => {
       profileImg,
       lat,
       lng,
-      role,
       social_login_type,
       uid,
     });

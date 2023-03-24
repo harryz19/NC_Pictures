@@ -17,6 +17,10 @@ const createAppointment = async (req, res) => {
       customer_id: req.user._id,
       customer_name: req.user.name,
       created_time: new Date().getTime(),
+      photographer_id: null,
+      photographer_name: null,
+      accepted_date: null,
+      completed_time: null,
     });
 
     await appointment.save();
