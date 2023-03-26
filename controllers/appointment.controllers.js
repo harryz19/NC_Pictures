@@ -29,7 +29,7 @@ const createAppointment = async (req, res) => {
 
     const photographers = await User.find({ role: "photographer" });
 
-    photographers = photographers.map(async (photographer) => {
+    photographers.forEach(async (photographer) => {
       await FirebaseNotify({
         to: photographer.firebase_token,
         priority: "high",
