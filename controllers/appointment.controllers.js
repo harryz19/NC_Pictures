@@ -161,18 +161,6 @@ const appointmentsByProvider = async (req, res) => {
         photographer_id: req.user._id,
         $or: [
           {
-            created_time: {
-              $gte: new Date(starttime).getTime(),
-              $lt: new Date(endtime).getTime(),
-            },
-          },
-          {
-            starttime: {
-              $gte: new Date(starttime).getTime(),
-              $lt: new Date(endtime).getTime(),
-            },
-          },
-          {
             accepted_time: {
               $gte: new Date(starttime).getTime(),
               $lt: new Date(endtime).getTime(),
@@ -191,25 +179,7 @@ const appointmentsByProvider = async (req, res) => {
         photographer_id: req.user._id,
         $or: [
           {
-            created_time: {
-              $gte: new Date(starttime).getTime(),
-              $lt: new Date(endtime).getTime(),
-            },
-          },
-          {
-            starttime: {
-              $gte: new Date(starttime).getTime(),
-              $lt: new Date(endtime).getTime(),
-            },
-          },
-          {
             completed_time: {
-              $gte: new Date(starttime).getTime(),
-              $lt: new Date(endtime).getTime(),
-            },
-          },
-          {
-            accepted_time: {
               $gte: new Date(starttime).getTime(),
               $lt: new Date(endtime).getTime(),
             },
