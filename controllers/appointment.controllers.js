@@ -1,5 +1,6 @@
 const Appointment = require("../models/appointment.model");
 const User = require("../models/users.model");
+const FirebaseNotify = require("../utils/notifications");
 
 // Create Appointment
 const createAppointment = async (req, res) => {
@@ -28,7 +29,17 @@ const createAppointment = async (req, res) => {
 
     const photographers = await User.find({ role: "photographer" });
 
-    photographers = photographers.map(() => {});
+    photographers = photographers.map(async (photographer) => {
+      await FirebaseNotify({
+        to: photographer.firebase_token,
+        priority: "high",
+        notification: {
+          title: "hello",
+          body: "notification successfull",
+          sound: "default",
+        },
+      });
+    });
 
     return res.status(201).json({
       status: "success",
