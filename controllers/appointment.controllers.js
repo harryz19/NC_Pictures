@@ -21,16 +21,16 @@ const createAppointment = async (req, res) => {
       created_time: new Date().getTime(),
       photographer_id: null,
       photographer_name: null,
-      accepted_time: null,
-      completed_time: null,
+      accepted_time: 0,
+      completed_time: 0,
     });
 
     await appointment.save();
 
     const photographers = await User.find({ role: "photographer" });
 
-    photographers.forEach(async (photographer) => {
-      await FirebaseNotify({
+    photographers.forEach((photographer) => {
+      FirebaseNotify({
         to: photographer.firebase_token,
         priority: "high",
         notification: {
@@ -82,10 +82,36 @@ const appointmentById = async (req, res) => {
 const appointmentsByCustomer = async (req, res) => {
   try {
     const { starttime, endtime } = req.body;
-    const appointments = await Appointment.find({ customer_id: req.user._id })
-      .where("starttime")
-      .gt(new Date(starttime).getTime())
-      .lt(new Date(endtime).getTime());
+
+    const appointments = await Appointment.find({
+      customer_id: req.user._id,
+      $or: [
+        {
+          created_time: {
+            $gte: new Date(starttime).getTime(),
+            $lt: new Date(endtime).getTime(),
+          },
+        },
+        {
+          starttime: {
+            $gte: new Date(starttime).getTime(),
+            $lt: new Date(endtime).getTime(),
+          },
+        },
+        {
+          completed_time: {
+            $gte: new Date(starttime).getTime(),
+            $lt: new Date(endtime).getTime(),
+          },
+        },
+        {
+          accepted_time: {
+            $gte: new Date(starttime).getTime(),
+            $lt: new Date(endtime).getTime(),
+          },
+        },
+      ],
+    });
 
     return res.status(200).json({
       status: "success",
@@ -109,10 +135,21 @@ const appointmentsByProvider = async (req, res) => {
     if (status === "pending") {
       const appointments = await Appointment.find({
         status,
-      })
-        .where("starttime")
-        .gt(new Date(starttime).getTime())
-        .lt(new Date(endtime).getTime());
+        $or: [
+          {
+            created_time: {
+              $gte: new Date(starttime).getTime(),
+              $lt: new Date(endtime).getTime(),
+            },
+          },
+          {
+            starttime: {
+              $gte: new Date(starttime).getTime(),
+              $lt: new Date(endtime).getTime(),
+            },
+          },
+        ],
+      });
       return res.status(200).json({
         status: "success",
         message: "",
@@ -122,10 +159,27 @@ const appointmentsByProvider = async (req, res) => {
       const appointments = await Appointment.find({
         status,
         photographer_id: req.user._id,
-      })
-        .where("starttime")
-        .gt(new Date(starttime).getTime())
-        .lt(new Date(endtime).getTime());
+        $or: [
+          {
+            created_time: {
+              $gte: new Date(starttime).getTime(),
+              $lt: new Date(endtime).getTime(),
+            },
+          },
+          {
+            starttime: {
+              $gte: new Date(starttime).getTime(),
+              $lt: new Date(endtime).getTime(),
+            },
+          },
+          {
+            accepted_time: {
+              $gte: new Date(starttime).getTime(),
+              $lt: new Date(endtime).getTime(),
+            },
+          },
+        ],
+      });
       return res.status(200).json({
         status: "success",
         message: "",
@@ -135,10 +189,33 @@ const appointmentsByProvider = async (req, res) => {
       const appointments = await Appointment.find({
         status,
         photographer_id: req.user._id,
-      })
-        .where("starttime")
-        .gt(new Date(starttime).getTime())
-        .lt(new Date(endtime).getTime());
+        $or: [
+          {
+            created_time: {
+              $gte: new Date(starttime).getTime(),
+              $lt: new Date(endtime).getTime(),
+            },
+          },
+          {
+            starttime: {
+              $gte: new Date(starttime).getTime(),
+              $lt: new Date(endtime).getTime(),
+            },
+          },
+          {
+            completed_time: {
+              $gte: new Date(starttime).getTime(),
+              $lt: new Date(endtime).getTime(),
+            },
+          },
+          {
+            accepted_time: {
+              $gte: new Date(starttime).getTime(),
+              $lt: new Date(endtime).getTime(),
+            },
+          },
+        ],
+      });
       return res.status(200).json({
         status: "success",
         message: "",

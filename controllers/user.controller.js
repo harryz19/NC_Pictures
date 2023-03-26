@@ -39,6 +39,7 @@ const registerUser = async (req, res) => {
       lng,
       address,
       role,
+      firebase_token: "",
     });
 
     await user.save();
