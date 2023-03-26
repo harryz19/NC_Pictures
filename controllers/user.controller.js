@@ -60,7 +60,7 @@ const registerUser = async (req, res) => {
 // Login User
 const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, firebase_token } = req.body;
 
     const loginUser = await User.findOne({ email });
     if (!loginUser) {
@@ -72,6 +72,9 @@ const loginUser = async (req, res) => {
     if (!isMatch) {
       throw new Error("Incorrect Password.");
     }
+
+    loginUser.firebase_token = firebase_token;
+    await loginUser.save();
     const token = loginUser.generateAuthtoken();
     return res.status(200).json({
       status: "success",

@@ -1,4 +1,5 @@
 const Appointment = require("../models/appointment.model");
+const User = require("../models/users.model");
 
 // Create Appointment
 const createAppointment = async (req, res) => {
@@ -24,6 +25,11 @@ const createAppointment = async (req, res) => {
     });
 
     await appointment.save();
+
+    const photographers = await User.find({ role: "photographer" });
+
+    photographers = photographers.map(() => {});
+
     return res.status(201).json({
       status: "success",
       message: "Appointment created successfully.",
