@@ -125,6 +125,10 @@ const socialLogin = async (req, res) => {
       lng,
       social_login_type,
       uid,
+      role: "",
+      firebase_token: "",
+      mobile: "",
+      address: "",
     });
 
     await newUser.save();
