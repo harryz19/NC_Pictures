@@ -17,10 +17,10 @@ const registerUser = async (req, res) => {
       role,
     } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email, mobile });
 
     if (existingUser) {
-      throw new Error("User with email Id already exists.");
+      throw new Error("User with this email or mobile already exists.");
     }
 
     if (!password) {
@@ -92,12 +92,22 @@ const loginUser = async (req, res) => {
 // Social Login
 const socialLogin = async (req, res) => {
   try {
-    const { name, email, profileImg, lat, lng, social_login_type, uid, firebase_token } =
-      req.body;
+    const {
+      name,
+      email,
+      profileImg,
+      lat,
+      lng,
+      social_login_type,
+      uid,
+      firebase_token,
+    } = req.body;
 
     if (social_login_type !== "apple") {
       const user = await User.findOne({ email });
       if (user) {
+        user.firebase_token = firebase_token;
+        await user.save();
         const token = user.generateAuthtoken();
         return res.status(200).json({
           status: "success",
@@ -108,6 +118,8 @@ const socialLogin = async (req, res) => {
     } else if (social_login_type === "apple") {
       const exUser = await User.findOne({ uid });
       if (exUser) {
+        exUser.firebase_token = firebase_token;
+        await exUser.save();
         const token = exUser.generateAuthtoken();
         return res.status(200).json({
           status: "success",
