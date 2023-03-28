@@ -127,8 +127,8 @@ const socialLogin = async (req, res) => {
       uid,
       role: "",
       firebase_token: "",
-      mobile: "",
-      address: "",
+      mobile: null,
+      address: null,
     });
 
     await newUser.save();
