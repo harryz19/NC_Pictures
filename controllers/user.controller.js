@@ -92,7 +92,7 @@ const loginUser = async (req, res) => {
 // Social Login
 const socialLogin = async (req, res) => {
   try {
-    const { name, email, profileImg, lat, lng, social_login_type, uid } =
+    const { name, email, profileImg, lat, lng, social_login_type, uid, firebase_token } =
       req.body;
 
     if (social_login_type !== "apple") {
@@ -126,7 +126,7 @@ const socialLogin = async (req, res) => {
       social_login_type,
       uid,
       role: "",
-      firebase_token: "",
+      firebase_token: firebase_token,
       mobile: null,
       address: null,
     });
