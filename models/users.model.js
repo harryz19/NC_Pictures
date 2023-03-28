@@ -16,7 +16,6 @@ const userSchema = new mongoose.Schema({
   },
   mobile: {
     type: String,
-    unique: [true, "Mobile number is already in use."],
   },
   profileImg: {
     type: String,
@@ -28,7 +27,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["customer", "photographer",""],
+    enum: ["customer", "photographer", ""],
   },
   firebase_token: String,
   uid: String,
