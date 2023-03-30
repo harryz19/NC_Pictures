@@ -37,6 +37,10 @@ const createAppointment = async (req, res) => {
           title: "New Appointment Uploaded",
           body: "New appointment is uploaded, check it.",
           sound: "default",
+          payload: "payload",
+        },
+        data: {
+          id: { pageId: "appointment", id: appointment._id },
         },
       });
     });
