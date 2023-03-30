@@ -34,8 +34,8 @@ const createAppointment = async (req, res) => {
         to: photographer.firebase_token,
         priority: "high",
         notification: {
-          title: "hello",
-          body: "notification successfull",
+          title: "New Appointment Uploaded",
+          body: "New appointment is uploaded, check it.",
           sound: "default",
         },
       });
