@@ -118,6 +118,7 @@ const socialLogin = async (req, res) => {
     } else if (social_login_type === "apple") {
       const exUser = await User.findOne({ uid });
       if (exUser) {
+        console.log(exUser)
         exUser.firebase_token = firebase_token;
         await exUser.save();
         const token = exUser.generateAuthtoken();
