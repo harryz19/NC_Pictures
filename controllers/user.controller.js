@@ -190,6 +190,19 @@ const deleteUser = async (req, res) => {
   try {
     const userid = req.user._id;
 
+    const user = await User.findOne({
+      _id: userid,
+      social_login_type: "apple",
+    });
+
+    if (user) {
+      return res.status(200).json({
+        status: "success",
+        data: {},
+        message: "User account delete successfully",
+      });
+    }
+
     await User.deleteOne({ _id: userid });
 
     return res.status(200).json({
