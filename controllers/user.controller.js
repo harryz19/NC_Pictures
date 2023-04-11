@@ -1,8 +1,9 @@
 const User = require("../models/users.model");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
+const { sendMail } = require("../utils/mailsend");
 
-// Regitser User
+// Register User
 const registerUser = async (req, res) => {
   try {
     const {
@@ -44,6 +45,14 @@ const registerUser = async (req, res) => {
 
     await user.save();
 
+    const baseURL =
+      "https://ncpictures.onrender.com" || "http://localhost:8000";
+    const URL = `${baseURL}/confirmaccount?uid=${
+      user._id
+    }&ts=${Date.now().valueOf()}`;
+    const message = `Open this link to activate account: <a href=${URL}>Activate your account</a>`;
+    sendMail(email, message);
+
     return res.status(201).json({
       status: "success",
       data: {},
@@ -55,6 +64,33 @@ const registerUser = async (req, res) => {
       data: {},
       message: error.message,
     });
+  }
+};
+
+// Activate Account
+const activateAccount = async (req, res) => {
+  try {
+    const { timestamp, uid } = req.body;
+    if (Date.now().valueOf() - timestamp < 600000) {
+      const user = await User.findOne({
+        _id: uid,
+      });
+
+      if (!user) {
+        throw new Error("User not found.");
+      }
+
+      user.accountStatus = true;
+      await user.save();
+
+      return res
+        .status(200)
+        .json({ message: "Your account activated succesfully." });
+    } else {
+      return res.status(400).json({ message: "This link is expired." });
+    }
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
   }
 };
 
@@ -118,7 +154,6 @@ const socialLogin = async (req, res) => {
     } else if (social_login_type === "apple") {
       const exUser = await User.findOne({ uid });
       if (exUser) {
-        console.log(exUser)
         exUser.firebase_token = firebase_token;
         await exUser.save();
         const token = exUser.generateAuthtoken();
@@ -222,6 +257,7 @@ const deleteUser = async (req, res) => {
 
 module.exports = {
   registerUser,
+  activateAccount,
   loginUser,
   socialLogin,
   updateMobile,
