@@ -104,6 +104,10 @@ const loginUser = async (req, res) => {
       throw new Error("User not found.");
     }
 
+    if (loginUser.accountStatus === false) {
+      throw new Error("Your email is not verifed.");
+    }
+
     const isMatch = await bcrypt.compare(password, loginUser.password);
 
     if (!isMatch) {
