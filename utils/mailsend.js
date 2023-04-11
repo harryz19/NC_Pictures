@@ -13,7 +13,7 @@ const sendMail = async (email, message) => {
     from: `NC Pictures <${process.env.GOOGLE_USER}>`,
     to: email,
     subject: "NC Pictures - Activate Account",
-    text: `${message} This link is valid for only 10 minutes and Please don't share this mail with anyone.`,
+    html: `${message} This link is valid for only 10 minutes and Please don't share this mail with anyone.`,
   };
 
   mailTransporter.sendMail(mailDetails, function (err, data) {
