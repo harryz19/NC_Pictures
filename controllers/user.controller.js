@@ -72,24 +72,24 @@ const registerUser = async (req, res) => {
 const activateAccount = async (req, res) => {
   try {
     const { timestamp, uid } = req.body;
-    if (Date.now().valueOf() - timestamp < 600000) {
-      const user = await User.findOne({
-        _id: uid,
-      });
+    // if (Date.now().valueOf() - timestamp < 600000) {
+    const user = await User.findOne({
+      _id: uid,
+    });
 
-      if (!user) {
-        throw new Error("User not found.");
-      }
-
-      user.accountStatus = true;
-      await user.save();
-
-      return res
-        .status(200)
-        .json({ message: "Your account activated succesfully." });
-    } else {
-      return res.status(400).json({ message: "This link is expired." });
+    if (!user) {
+      throw new Error("User not found.");
     }
+
+    user.accountStatus = true;
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: "Your account activated succesfully." });
+    // } else {
+    //   return res.status(400).json({ message: "This link is expired." });
+    // }
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
