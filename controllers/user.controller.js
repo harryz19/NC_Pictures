@@ -18,9 +18,10 @@ const registerUser = async (req, res) => {
       role,
     } = req.body;
 
-    const existingUser = await User.findOne({ email, mobile });
+    const existingUser = await User.findOne({ email });
+    const existMobile = await User.findOne({ mobile });
 
-    if (existingUser) {
+    if (existingUser || existMobile) {
       throw new Error("User with this email or mobile already exists.");
     }
 
@@ -56,7 +57,7 @@ const registerUser = async (req, res) => {
     return res.status(201).json({
       status: "success",
       data: {},
-      message: "User registered successfully.",
+      message: "Registered successfully.",
     });
   } catch (error) {
     return res.status(400).send({
