@@ -17,6 +17,7 @@ app.get("/confirmaccount", (req, res) => {
   res.sendFile(path.join(__dirname, "utils", "activate_account.html"));
 });
 
+
 app.use("/user", userRouter);
 app.use("/appointment", appointmentRouter);
 

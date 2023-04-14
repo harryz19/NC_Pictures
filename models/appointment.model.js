@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const appointmentSchema = new mongoose.Schema({
   customer_name: String,
   photographer_name: String,
-  customer_id: mongoose.Types.ObjectId,
-  photographer_id: mongoose.Types.ObjectId,
+  customer_id: { type: mongoose.Types.ObjectId, ref: "user" },
+  photographer_id: { type: mongoose.Types.ObjectId, ref: "user" },
   lat: Number,
   lng: Number,
   address: String,

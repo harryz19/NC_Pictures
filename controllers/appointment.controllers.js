@@ -1,5 +1,6 @@
 const Appointment = require("../models/appointment.model");
 const User = require("../models/users.model");
+const { sendStatusMail } = require("../utils/mailsend");
 const FirebaseNotify = require("../utils/notifications");
 
 // Create Appointment
@@ -215,25 +216,37 @@ const updateStatus = async (req, res) => {
     }
 
     if (status === "accepted") {
-      await Appointment.updateOne(
-        { _id: req.params.id },
-        {
-          status,
-          accepted_time: new Date().getTime(),
-          photographer_id: req.user._id,
-          photographer_name: req.user.name,
-        }
-      );
+      const appointment = await Appointment.findOne({
+        _id: req.params.id,
+      });
+
+      appointment.status = status;
+      appointment.accepted_time = new Date().getTime();
+      appointment.photographer_id = req.user._id;
+      appointment.photographer_name = req.user.name;
+
+      await appointment.save();
+      await appointment.populate("customer_id", "_id name email");
+      await appointment.populate("photographer_id", "_id name email");
+
+      const message = `Your request is accepted.`;
+      sendStatusMail(appointment.photographer_id?.email, message);
+      sendStatusMail(appointment.customer_id?.email, message);
     } else if (status === "completed") {
-      await Appointment.updateOne(
-        { _id: req.params.id },
-        {
-          status,
-          completed_time: new Date().getTime(),
-          photographer_id: req.user._id,
-          photographer_name: req.user.name,
-        }
-      );
+      const appointment = await Appointment.findOne({ _id: req.params.id });
+
+      appointment.status = status;
+      appointment.completed_time = new Date().getTime();
+      appointment.photographer_id = req.user._id;
+      appointment.photographer_name = req.user.name;
+
+      await appointment.save();
+      await appointment.populate("customer_id", "_id name email");
+      await appointment.populate("photographer_id", "_id name email");
+
+      const message = `Your request is completed.`;
+      sendStatusMail(appointment.photographer_id?.email, message);
+      sendStatusMail(appointment.customer_id?.email, message);
     }
     return res.status(200).json({
       status: "success",
