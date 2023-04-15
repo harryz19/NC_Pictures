@@ -158,6 +158,12 @@ const socialLogin = async (req, res) => {
       }
     } else if (social_login_type === "apple") {
       const exUser = await User.findOne({ uid });
+      const exEmail = await User.findOne({ email });
+
+      if (exEmail) {
+        throw new Error("User with this email already registered.");
+      }
+
       if (exUser) {
         exUser.firebase_token = firebase_token;
         await exUser.save();
