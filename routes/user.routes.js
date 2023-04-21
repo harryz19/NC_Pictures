@@ -5,6 +5,8 @@ const {
   updateMobile,
   socialLogin,
   activateAccount,
+  forgotPassword,
+  resetPassword,
 } = require("../controllers/user.controller");
 const auth = require("../middlewares/auth");
 
@@ -16,5 +18,7 @@ router.post("/login", loginUser);
 router.delete("/delete", auth, deleteUser);
 router.post("/updatedetails", auth, updateMobile);
 router.post("/sociallogin", socialLogin);
+router.post("/forgotpassword", forgotPassword);
+router.post("/resetpassword", resetPassword);
 
 module.exports = router;

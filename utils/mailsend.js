@@ -50,7 +50,33 @@ const sendStatusMail = async (email, message) => {
   });
 };
 
+const sendForgotPasswordMail = async (email, message) => {
+  let mailTransporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.GOOGLE_USER,
+      pass: process.env.GOOGLE_PASSWORD,
+    },
+  });
+
+  let mailDetails = {
+    from: `NC Pictures <${process.env.GOOGLE_USER}>`,
+    to: email,
+    subject: "NC Pictures - Forgot Password",
+    html: `${message}<br/>Please don't share this mail with anyone.`,
+  };
+
+  mailTransporter.sendMail(mailDetails, function (err, data) {
+    if (err) {
+      console.log("Error Occurs");
+    } else {
+      console.log("Email sent successfully.");
+    }
+  });
+};
+
 module.exports = {
   sendMail,
   sendStatusMail,
+  sendForgotPasswordMail,
 };

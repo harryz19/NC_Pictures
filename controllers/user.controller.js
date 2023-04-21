@@ -1,7 +1,7 @@
 const User = require("../models/users.model");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
-const { sendMail } = require("../utils/mailsend");
+const { sendMail, sendForgotPasswordMail } = require("../utils/mailsend");
 
 // Register User
 const registerUser = async (req, res) => {
@@ -266,6 +266,72 @@ const deleteUser = async (req, res) => {
   }
 };
 
+function generateRandomNumber() {
+  var minm = 100000;
+  var maxm = 999999;
+  return Math.floor(Math.random() * (maxm - minm + 1)) + minm;
+}
+
+const forgotPassword = async (req, res) => {
+  try {
+    if (!req.body.email) throw new Error("Please enter your email.");
+
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+      throw new Error("User with this email not exists.");
+    }
+
+    const otp = generateRandomNumber();
+
+    const message = `Your forgot password OTP: ${otp}.`;
+    sendForgotPasswordMail(user.email, message);
+
+    return res.status(200).json({
+      status: "success",
+      data: { otp },
+      message: "Email send successfully.",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: "error",
+      data: {},
+      message: error.message,
+    });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+      throw new Error("User with this email not exists.");
+    }
+
+    if (!req.body.password) {
+      throw new Error("Please create new password.");
+    }
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 12);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.status(200).json({
+      status: "success",
+      data: {},
+      message: "Password updated successfully.",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: "error",
+      data: {},
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   registerUser,
   activateAccount,
@@ -273,4 +339,6 @@ module.exports = {
   socialLogin,
   updateMobile,
   deleteUser,
+  forgotPassword,
+  resetPassword,
 };
