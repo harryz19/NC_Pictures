@@ -1,6 +1,6 @@
 const Appointment = require("../models/appointment.model");
 const User = require("../models/users.model");
-const { sendStatusMail } = require("../utils/mailsend");
+const { sendStatusMail, sendCreateRequestMail } = require("../utils/mailsend");
 const FirebaseNotify = require("../utils/notifications");
 
 // Create Appointment
@@ -45,6 +45,10 @@ const createAppointment = async (req, res) => {
         },
       });
     });
+
+    const message = "Your appointment is created successfully.";
+
+    await sendCreateRequestMail(req.user.email, message);
 
     return res.status(201).json({
       status: "success",

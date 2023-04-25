@@ -21,7 +21,14 @@ const auth = async (req, res, next) => {
         data: "",
         message: "Session Expired.",
       });
+    } else if (error.message === "User logged out.") {
+      return res.status(400).json({
+        status: "logout",
+        data: "",
+        message: "User logged out.",
+      });
     }
+
     return res.status(400).json({
       status: "error",
       data: "",
