@@ -31,6 +31,10 @@ const createAppointment = async (req, res) => {
     const photographers = await User.find({ role: "photographer" });
 
     photographers.forEach((photographer) => {
+      sendCreateRequestMail(
+        photographer.email,
+        "There's a appointment for you. Accept it."
+      );
       FirebaseNotify({
         to: photographer.firebase_token,
         priority: "high",
