@@ -7,6 +7,7 @@ const {
   activateAccount,
   forgotPassword,
   resetPassword,
+  getAllPhotographers,
 } = require("../controllers/user.controller");
 const auth = require("../middlewares/auth");
 
@@ -20,5 +21,6 @@ router.post("/updatedetails", auth, updateMobile);
 router.post("/sociallogin", socialLogin);
 router.post("/forgotpassword", forgotPassword);
 router.post("/resetpassword", resetPassword);
+router.get("/allphotographers", getAllPhotographers);
 
 module.exports = router;

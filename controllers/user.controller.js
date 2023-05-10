@@ -332,6 +332,24 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const getAllPhotographers = async (req, res) => {
+  try {
+    const allPhotographers = await User.find({ role: "photographer" });
+
+    return res.status(200).json({
+      status: "success",
+      data: { photographers: allPhotographers },
+      message: "",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: "error",
+      data: {},
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   registerUser,
   activateAccount,
@@ -341,4 +359,5 @@ module.exports = {
   deleteUser,
   forgotPassword,
   resetPassword,
+  getAllPhotographers,
 };

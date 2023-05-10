@@ -1,6 +1,10 @@
 const Appointment = require("../models/appointment.model");
 const User = require("../models/users.model");
-const { sendStatusMail, sendCreateRequestMail } = require("../utils/mailsend");
+const {
+  sendStatusMail,
+  sendCreateRequestMail,
+  sendAllocateAppointmentMail,
+} = require("../utils/mailsend");
 const FirebaseNotify = require("../utils/notifications");
 
 // Create Appointment
@@ -270,10 +274,72 @@ const updateStatus = async (req, res) => {
   }
 };
 
+const allocateAppoitment = async (req, res) => {
+  try {
+    const { photographer_id, appointment_id } = req.body;
+
+    const photographer = await User.findOne({ _id: photographer_id });
+    const appointment = await Appointment.findOne({ _id: appointment_id });
+
+    if (!photographer) {
+      return res.status(400).json({
+        status: "error",
+        data: {},
+        message: "Please provide correct photographer id.",
+      });
+    }
+
+    if (!appointment) {
+      return res.status(400).json({
+        status: "error",
+        data: {},
+        message: "Please provide correct appointment id.",
+      });
+    }
+
+    appointment.photographer_id = photographer._id;
+    appointment.photographer_name = photographer.name;
+
+    await appointment.save();
+
+    await FirebaseNotify({
+      to: photographer.firebase_token,
+      priority: "high",
+      notification: {
+        title: "Appointment allocated",
+        body: "New appointment is allocaed to you, check it.",
+        sound: "default",
+        payload: "payload",
+      },
+      data: {
+        id: { pageId: "appointment", id: appointment._id },
+      },
+    });
+
+    await sendAllocateAppointmentMail(
+      photographer.email,
+      "Appointment is allocated to you.Please check it."
+    );
+
+    return res.status(200).json({
+      status: "success",
+      data: {},
+      message: `Appointment allocated to ${photographer.name} (Photographer).`,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: "error",
+      data: {},
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createAppointment,
   appointmentById,
   appointmentsByCustomer,
   appointmentsByProvider,
   updateStatus,
+  allocateAppoitment,
 };
