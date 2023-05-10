@@ -299,6 +299,8 @@ const allocateAppoitment = async (req, res) => {
 
     appointment.photographer_id = photographer._id;
     appointment.photographer_name = photographer.name;
+    appointment.status = "accepted";
+    appointment.accepted_time = new Date().getTime();
 
     await appointment.save();
 

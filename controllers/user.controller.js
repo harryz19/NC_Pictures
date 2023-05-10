@@ -334,7 +334,10 @@ const resetPassword = async (req, res) => {
 
 const getAllPhotographers = async (req, res) => {
   try {
-    const allPhotographers = await User.find({ role: "photographer" });
+    const allPhotographers = await User.find({
+      role: "photographer",
+      accountStatus: true,
+    });
 
     return res.status(200).json({
       status: "success",
