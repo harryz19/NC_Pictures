@@ -21,6 +21,6 @@ router.post("/updatedetails", auth, updateMobile);
 router.post("/sociallogin", socialLogin);
 router.post("/forgotpassword", forgotPassword);
 router.post("/resetpassword", resetPassword);
-router.get("/allphotographers",auth, getAllPhotographers);
+router.get("/allphotographers", auth, getAllPhotographers);
 
 module.exports = router;

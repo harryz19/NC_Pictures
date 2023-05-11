@@ -336,7 +336,12 @@ const getAllPhotographers = async (req, res) => {
   try {
     const allPhotographers = await User.find({
       role: "photographer",
-      accountStatus: true,
+      $or: [
+        { accountStatus: true },
+        {
+          social_login_type: { $in: ["google", "facebook", "apple"] },
+        },
+      ],
     });
 
     return res.status(200).json({

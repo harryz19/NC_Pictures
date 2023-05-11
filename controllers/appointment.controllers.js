@@ -326,7 +326,7 @@ const allocateAppoitment = async (req, res) => {
     return res.status(200).json({
       status: "success",
       data: {},
-      message: `Appointment allocated to ${photographer.name} (Photographer).`,
+      message: `Appointment allocated to ${photographer.name}.`,
     });
   } catch (error) {
     return res.status(400).json({

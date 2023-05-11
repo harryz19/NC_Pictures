@@ -16,6 +16,6 @@ router.patch("/updatestatus/:id", auth, updateStatus);
 router.get("/appointmentbyid/:id", auth, appointmentById);
 router.post("/appointmentbycustomer", auth, appointmentsByCustomer);
 router.post("/appointmentsbystatus", auth, appointmentsByProvider);
-router.post("/allocateappointment", auth, allocateAppoitment);
+router.post("/allocateappointment",auth, allocateAppoitment);
 
 module.exports = router;
