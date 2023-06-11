@@ -31,15 +31,32 @@ const createAppointment = async (req, res) => {
     });
 
     await appointment.save();
+    
+    const admins = await User.find({isAdmin: true});
+
+    admins.forEach(async (admin)=>{
+      await FirebaseNotify({
+        to: admin.firebase_token,
+        priority: "high",
+        notification: {
+          title: "New Appointment Uploaded",
+          body: "New appointment is uploaded, check it.",
+          sound: "default",
+          payload: "payload",
+        },
+        data: {
+          id: { pageId: "appointment", id: appointment._id },
+        },
+    })})
 
     const photographers = await User.find({ role: "photographer" });
 
-    photographers.forEach((photographer) => {
-      sendCreateRequestMail(
+    photographers.forEach(async (photographer) => {
+      await sendCreateRequestMail(
         photographer.email,
         "There's a appointment for you. Accept it."
-      );
-      FirebaseNotify({
+        );
+      await FirebaseNotify({
         to: photographer.firebase_token,
         priority: "high",
         notification: {

@@ -44,6 +44,9 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  coupon_code: {
+    type: String,
+  },
 });
 
 userSchema.methods.toJSON = function () {
