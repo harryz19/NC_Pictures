@@ -31,10 +31,10 @@ const createAppointment = async (req, res) => {
     });
 
     await appointment.save();
-    
-    const admins = await User.find({isAdmin: true});
 
-    admins.forEach(async (admin)=>{
+    const admins = await User.find({ isAdmin: true });
+
+    admins.forEach(async (admin) => {
       await FirebaseNotify({
         to: admin.firebase_token,
         priority: "high",
@@ -47,7 +47,8 @@ const createAppointment = async (req, res) => {
         data: {
           id: { pageId: "appointment", id: appointment._id },
         },
-    })})
+      });
+    });
 
     const photographers = await User.find({ role: "photographer" });
 
@@ -55,7 +56,7 @@ const createAppointment = async (req, res) => {
       await sendCreateRequestMail(
         photographer.email,
         "There's a appointment for you. Accept it."
-        );
+      );
       await FirebaseNotify({
         to: photographer.firebase_token,
         priority: "high",
@@ -298,6 +299,10 @@ const allocateAppoitment = async (req, res) => {
     const photographer = await User.findOne({ _id: photographer_id });
     const appointment = await Appointment.findOne({ _id: appointment_id });
 
+    const alreadyAllocated = await Appointment.findOne({
+      _id: appointment_id,
+    });
+
     if (!photographer) {
       return res.status(400).json({
         status: "error",
@@ -311,6 +316,14 @@ const allocateAppoitment = async (req, res) => {
         status: "error",
         data: {},
         message: "Please provide correct appointment id.",
+      });
+    }
+
+    if (alreadyAllocated.photographer_id) {
+      return res.status(400).json({
+        status: "error",
+        data: {},
+        message: "This appointment is already allocated.",
       });
     }
 

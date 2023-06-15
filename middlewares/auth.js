@@ -4,6 +4,13 @@ require("dotenv").config();
 
 const auth = async (req, res, next) => {
   try {
+    if (!req.header("Authorization")) {
+      return res.status(400).json({
+        status: "error",
+        data: "",
+        message: "Please login to continue.",
+      });
+    }
     const token = req.header("Authorization").replace("Bearer ", "");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
